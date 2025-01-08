@@ -30,6 +30,12 @@ client.on('messageCreate', async (message) => {
         }
 
         try {
+
+            const downloadsDir = './downloads';
+            if (!fs.existsSync(downloadsDir)) {
+                fs.mkdirSync(downloadsDir);
+            }
+
             // Baixa o áudio do YouTube
             const info = await ytdl.getInfo(url);
             const audioStream = ytdl(url, { filter: 'audioonly' });
@@ -39,8 +45,7 @@ client.on('messageCreate', async (message) => {
             .replace(/\s+/g, '_'); 
 
             // Define o nome do arquivo
-            const fileName = `./downloads/${sanitizedTitle}.mp3`;
-
+            const fileName = `${downloadsDir}/${sanitizedTitle}.mp3`;
             // Converte para MP3 usando ffmpeg
             ffmpeg(audioStream)
                 .audioBitrate(128)
